@@ -1,20 +1,44 @@
 /* --- Variables Navideñas --- */
 :root {
-  --primary-color: #C0392B; 
-  --secondary-color: #27AE60; 
-  --gold-color: #F1C40F;      
+  --primary-color: #C0392B; /* Rojo Navidad */
+  --secondary-color: #27AE60; /* Verde Pino */
+  --gold-color: #F1C40F;      /* Dorado */
   --text-color: #2c3e50;
-  --bg-snow: #f0f4f8;
+  /* Color de fondo para la nieve */
+  --bg-overlay: rgba(255, 255, 255, 0.88); 
 }
+
+/* ... (Las variables :root permanecen igual al inicio) ... */
 
 body {
   font-family: 'Montserrat', sans-serif;
   padding: 40px;
   color: var(--text-color);
-  background: radial-gradient(circle at center, #fff 0%, #dde9f0 100%);
   min-height: 100vh;
-  overflow-x: hidden; 
+  overflow-x: hidden;
+
+  /* --- NUEVO FONDO ESPOCH OPACO --- */
+  background: 
+    /* CAPA 1 (Superior): Degradado de tinte "Opaco/Navideño". 
+       - Empieza blanco casi sólido en el centro para legibilidad.
+       - Termina en el rojo principal de tu tema con transparencia (0.6) hacia los bordes.
+    */
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 20%, rgba(192, 57, 43, 0.6) 100%),
+
+    /* CAPA 2 (Inferior): La foto de las instalaciones.
+       - NOTA: Puedes cambiar esta URL por cualquier otra foto de la ESPOCH que prefieras.
+    */
+    url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Entrada_Principal_ESPOCH.jpg/1280px-Entrada_Principal_ESPOCH.jpg') no-repeat center center fixed;
+
+  /* Asegura que la imagen cubra toda la pantalla sin deformarse */
+  background-size: cover;
+  
+  /* Modo de mezcla: "overlay" o "multiply" ayudan a integrar el color sobre la foto */
+  background-blend-mode: overlay;
+  /* -------------------------------- */
 }
+
+/* ... (El resto del CSS, desde h1 en adelante, sigue exactamente igual) ... */
 
 h1 {
   font-size: 2.8em;
@@ -24,15 +48,23 @@ h1 {
   text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
   z-index: 10;
   position: relative;
+  margin-bottom: 10px;
 }
 
 .subtitle {
   text-align: center;
-  color: #555;
+  color: #444; /* Un poco más oscuro para resaltar sobre el fondo */
   margin-bottom: 30px;
   font-weight: 700;
   z-index: 10;
   position: relative;
+  background-color: rgba(255,255,255,0.6); /* Pequeña placa de fondo para el texto */
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 15px;
+  /* Centrar el bloque del subtítulo */
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* --- Tabla Decorada --- */
@@ -43,31 +75,34 @@ h1 {
   background: rgba(255, 255, 255, 0.95);
   position: relative;
   z-index: 10;
+  
+  /* Borde Festivo (Bastón de Caramelo) */
   box-shadow: 
     0 0 0 6px white, 
     0 0 0 9px var(--primary-color), 
     0 0 0 12px white, 
     0 0 0 15px var(--secondary-color),
     0 10px 30px rgba(0,0,0,0.2);
+    
   transition: transform 0.5s ease;
 
-  /* --- HABILITAR SCROLL SI LA TABLA ES MUY GRANDE --- */
-  overflow-x: auto; /* Esto permite mover la tabla horizontalmente */
-  -webkit-overflow-scrolling: touch; /* Suavidad en iPhone/Android */
+  /* --- HABILITAR SCROLL HORIZONTAL (MÓVIL) --- */
+  overflow-x: auto; 
+  -webkit-overflow-scrolling: touch; 
 }
 
 table { 
   width: 100%; 
   border-collapse: collapse; 
-  /* Asegura que la tabla no se aplaste demasiado */
-  min-width: 600px; 
+  /* Ancho mínimo para forzar el scroll en pantallas pequeñas */
+  min-width: 700px; 
 }
 
 th, td { 
   padding: 18px 15px; 
   text-align: center; 
   border-bottom: 1px solid #eee;
-  /* Evita que el texto se rompa en líneas raras en celular */
+  /* Evitar que el texto se rompa */
   white-space: nowrap; 
 }
 
@@ -79,7 +114,7 @@ th {
   letter-spacing: 1px;
 }
 
-/* --- Podio --- */
+/* --- Estilos del Podio --- */
 .gold { background: linear-gradient(to right, #fff9c4, #fff); border-left: 8px solid var(--gold-color); }
 .gold td:first-child { font-size: 1.6em; color: #b7950b; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
@@ -94,7 +129,7 @@ th {
 
 small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
 
-/* --- Animación --- */
+/* --- Animación Flash (Actualización Top 3) --- */
 @keyframes snowFlash {
   0% { transform: scale(1); filter: brightness(1); }
   50% { transform: scale(1.02); filter: brightness(1.2) drop-shadow(0 0 15px gold); }
@@ -102,33 +137,93 @@ small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
 }
 .animate-update { animation: snowFlash 1.2s ease-in-out; }
 
-/* --- Nieve --- */
-.snowflake {
-  position: fixed; top: -10px; z-index: 1; color: #d6eaf8; font-size: 1em;
-  text-shadow: 0 0 5px #000; user-select: none; cursor: default;
-  animation-name: fall, sway; animation-timing-function: linear, ease-in-out; animation-iteration-count: infinite, infinite;
+/* --- SECCIÓN QR --- */
+#qr-container {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 10;
 }
-@keyframes fall { 0% { top: -10%; } 100% { top: 100%; } }
-@keyframes sway { 0% { transform: translateX(0px); } 50% { transform: translateX(50px); } 100% { transform: translateX(0px); } }
 
-/* --- RESPONSIVIDAD (SOLO AJUSTES DE TAMAÑO) --- */
+.qr-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: var(--primary-color);
+  font-size: 1.5em;
+  margin-bottom: 25px;
+  text-shadow: 2px 2px 0px #fff;
+  background-color: rgba(255,255,255,0.7);
+  display: inline-block;
+  padding: 5px 20px;
+  border-radius: 20px;
+}
+
+.qr-image {
+  background-color: white;
+  padding: 10px; 
+  border-radius: 25px;
+  /* Doble borde festivo */
+  box-shadow: 
+    0 0 0 8px white,
+    0 0 0 15px var(--secondary-color), 
+    0 20px 40px rgba(0,0,0,0.3);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.qr-image:hover {
+  transform: scale(1.1) rotate(3deg);
+  cursor: pointer;
+}
+
+/* --- Efecto Nieve --- */
+.snowflake {
+  position: fixed; 
+  top: -10px; 
+  z-index: 1; 
+  color: #d6eaf8; 
+  font-size: 1em;
+  text-shadow: 0 0 5px #000; 
+  user-select: none; 
+  cursor: default;
+  animation-name: fall, sway; 
+  animation-timing-function: linear, ease-in-out; 
+  animation-iteration-count: infinite, infinite;
+}
+
+@keyframes fall { 
+  0% { top: -10%; } 
+  100% { top: 100%; } 
+}
+
+@keyframes sway { 
+  0% { transform: translateX(0px); } 
+  50% { transform: translateX(50px); } 
+  100% { transform: translateX(0px); } 
+}
+
+/* --- Responsividad --- */
 @media (max-width: 768px) {
   body { 
-    padding: 15px 5px; /* Menos padding en celular para aprovechar pantalla */
+    padding: 15px 5px; 
   }
   
   #tablaContainer { 
     width: 100%; 
     margin-top: 10px; 
-    box-shadow: 0 0 0 4px var(--primary-color); /* Borde más delgado en móvil */
+    box-shadow: 0 0 0 4px var(--primary-color); 
   }
   
   h1 { 
-    font-size: 1.8em; /* Título más pequeño */
+    font-size: 1.8em; 
   }
 
-  /* YA NO TRANSFORMAMOS LA TABLA EN BLOQUES.
-     Al tener 'overflow-x: auto' en el #tablaContainer (arriba),
-     el usuario podrá deslizar horizontalmente.
-  */
+  .qr-title { 
+    font-size: 1.2em; 
+  }
+  
+  .qr-image {
+    width: 160px;
+    height: 160px;
+  }
 }
