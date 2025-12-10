@@ -1,8 +1,10 @@
+/* ... (Todo el CSS anterior se mantiene igual hasta la parte de Media Queries) ... */
+
 /* --- Variables Navideñas --- */
 :root {
-  --primary-color: #C0392B; /* Rojo Navidad */
-  --secondary-color: #27AE60; /* Verde Pino */
-  --gold-color: #F1C40F;      /* Dorado */
+  --primary-color: #C0392B; 
+  --secondary-color: #27AE60; 
+  --gold-color: #F1C40F;      
   --text-color: #2c3e50;
   --bg-snow: #f0f4f8;
 }
@@ -11,10 +13,9 @@ body {
   font-family: 'Montserrat', sans-serif;
   padding: 40px;
   color: var(--text-color);
-  /* Fondo base */
   background: radial-gradient(circle at center, #fff 0%, #dde9f0 100%);
   min-height: 100vh;
-  overflow-x: hidden; /* Evitar scroll horizontal por la nieve */
+  overflow-x: hidden; 
 }
 
 h1 {
@@ -36,37 +37,26 @@ h1 {
   position: relative;
 }
 
-/* --- Tabla Decorada (Bordes Festivos) --- */
+/* --- Tabla Decorada --- */
 #tablaContainer {
-  width: 85%;
+  width: 90%; /* Un poco más ancha para acomodar la nueva columna */
   margin: 20px auto;
   border-radius: 20px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.95);
   position: relative;
   z-index: 10;
-  
-  /* Borde Festivo Tipo "Bastón de Caramelo" usando sombras */
   box-shadow: 
     0 0 0 6px white, 
     0 0 0 9px var(--primary-color), 
     0 0 0 12px white, 
     0 0 0 15px var(--secondary-color),
     0 10px 30px rgba(0,0,0,0.2);
-    
   transition: transform 0.5s ease;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 18px 15px;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-}
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 18px 15px; text-align: center; border-bottom: 1px solid #eee; }
 
 th {
   background: linear-gradient(135deg, var(--primary-color), #922b21);
@@ -91,7 +81,7 @@ th {
 
 small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
 
-/* --- Animación de Flash (Tabla) --- */
+/* --- Animación --- */
 @keyframes snowFlash {
   0% { transform: scale(1); filter: brightness(1); }
   50% { transform: scale(1.02); filter: brightness(1.2) drop-shadow(0 0 15px gold); }
@@ -99,36 +89,41 @@ small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
 }
 .animate-update { animation: snowFlash 1.2s ease-in-out; }
 
-/* --- EFECTO NIEVE CAYENDO --- */
+/* --- Nieve --- */
 .snowflake {
-  position: fixed;
-  top: -10px;
-  z-index: 1; /* Detrás del texto principal pero visible */
-  color: #d6eaf8; /* Azul muy pálido */
-  font-size: 1em;
-  font-family: Arial, sans-serif;
-  text-shadow: 0 0 5px #000;
-  user-select: none;
-  cursor: default;
-  animation-name: fall, sway;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: infinite, infinite;
+  position: fixed; top: -10px; z-index: 1; color: #d6eaf8; font-size: 1em;
+  text-shadow: 0 0 5px #000; user-select: none; cursor: default;
+  animation-name: fall, sway; animation-timing-function: linear, ease-in-out; animation-iteration-count: infinite, infinite;
 }
+@keyframes fall { 0% { top: -10%; } 100% { top: 100%; } }
+@keyframes sway { 0% { transform: translateX(0px); } 50% { transform: translateX(50px); } 100% { transform: translateX(0px); } }
 
-@keyframes fall {
-  0% { top: -10%; }
-  100% { top: 100%; }
-}
-
-@keyframes sway {
-  0% { transform: translateX(0px); }
-  50% { transform: translateX(50px); }
-  100% { transform: translateX(0px); }
-}
-
-/* Responsividad */
+/* --- RESPONSIVIDAD (MÓVIL) ACTUALIZADA --- */
 @media (max-width: 768px) {
   body { padding: 15px; }
   #tablaContainer { width: 100%; margin-top: 10px; box-shadow: 0 0 0 4px var(--primary-color); }
   h1 { font-size: 2em; }
+  
+  /* Ajuste de tabla en móvil */
+  table, thead, tbody, th, td, tr { display: block; }
+  thead tr { position: absolute; top: -9999px; left: -9999px; }
+  tr { border: 1px solid #ccc; margin-bottom: 10px; border-radius: 8px; }
+  
+  td {
+    border: none; border-bottom: 1px solid #eee; position: relative;
+    padding-left: 50%; text-align: right;
+  }
+  
+  td:before {
+    position: absolute; top: 0; left: 6px; width: 45%; padding-right: 10px;
+    white-space: nowrap; text-align: left; font-weight: 700; color: var(--primary-color);
+    padding-top: 18px; /* Alinear verticalmente con el contenido */
+  }
+
+  /* ETIQUETAS ACTUALIZADAS PARA 5 COLUMNAS */
+  td:nth-of-type(1):before { content: "Lugar"; }
+  td:nth-of-type(2):before { content: "Comparsa"; }
+  td:nth-of-type(3):before { content: "Carrera"; } /* Nueva Etiqueta */
+  td:nth-of-type(4):before { content: "Puntaje"; }
+  td:nth-of-type(5):before { content: "Premio"; }
 }
