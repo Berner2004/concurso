@@ -1,0 +1,131 @@
+:root{
+  --bg:#071026;
+  --card:#071428cc;
+  --text:#e6eef8;
+  --muted:#9fb0c8;
+  --round:12px;
+  --shadow: 0 12px 30px rgba(2,8,23,0.65);
+}
+
+/* Reset */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: linear-gradient(180deg,#061223 0%, #07192a 60%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+/* Layout */
+.container{
+  max-width:1100px;
+  margin:48px auto;
+  padding:28px;
+  position:relative;
+  z-index:5;
+}
+.header h1{
+  margin:0 0 6px 0;
+  font-size:28px;
+  color:#fff;
+}
+.lead{ margin:0; color:var(--muted); font-size:13px; }
+
+/* Card */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: var(--round);
+  padding:18px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Table */
+.table-wrap{ overflow:auto; border-radius:10px; }
+table{ width:100%; border-collapse:collapse; min-width:820px; }
+thead th{
+  text-align:left; padding:14px; font-size:13px; color:#e6eef8;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  position: sticky; top:0; backdrop-filter: blur(4px);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+tbody td{ padding:14px 12px; vertical-align:middle; border-bottom:1px solid rgba(255,255,255,0.03); font-size:15px;}
+
+/* Cols */
+.place{ width:64px; text-align:center; font-weight:700; font-size:18px; }
+.name{ text-align:left; }
+.name-main{ font-weight:700; font-size:15px; color:#fff; }
+.meta{ color:var(--muted); font-size:12px; margin-top:6px; }
+.votes, .score, .prize{ width:120px; text-align:center; font-weight:700; }
+
+/* Top 3 navideños */
+tbody tr.first{
+  background: linear-gradient(90deg, rgba(255,215,0,0.12), rgba(255,255,255,0.02));
+  border-left:6px solid #ffd700;
+  transition: transform .35s ease, box-shadow .25s ease;
+}
+tbody tr.second{
+  background: linear-gradient(90deg, rgba(16,185,129,0.08), rgba(255,255,255,0.01));
+  border-left:6px solid #10b981;
+}
+tbody tr.third{
+  background: linear-gradient(90deg, rgba(239,68,68,0.08), rgba(255,255,255,0.01));
+  border-left:6px solid #ef4444;
+}
+
+/* Otros */
+tbody tr:not(.first):not(.second):not(.third){
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+}
+
+/* Animaciones cuando cambian de posición */
+tbody tr.moved-up{ animation: bumpUp 0.9s ease forwards; box-shadow: 0 16px 36px rgba(0,0,0,0.45); }
+tbody tr.moved-down{ animation: bumpDown 0.9s ease forwards; box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+tbody tr.new-entry{ animation: glowNew 1.2s ease forwards; }
+
+/* Keyframes */
+@keyframes bumpUp {
+  0% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(-12px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes bumpDown {
+  0% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(8px) scale(.99); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes glowNew {
+  0% { box-shadow: 0 0 0 rgba(255,255,255,0); transform: scale(.98); opacity:0.0; }
+  50% { box-shadow: 0 8px 28px rgba(255,255,255,0.06); transform: scale(1.02); opacity:1; }
+  100% { box-shadow: none; transform: scale(1); opacity:1; }
+}
+
+/* Responsivo */
+@media (max-width:900px){
+  .container{ padding:18px; margin:28px auto; }
+  thead th{ font-size:12px; padding:12px; }
+  tbody td{ padding:10px; font-size:14px; }
+}
+
+/* Footer */
+.footer{ margin-top:12px; color:var(--muted); font-size:12px; }
+
+/* Snow canvas behind content */
+#snowCanvas{
+  position:fixed; left:0; top:0; width:100%; height:100%; z-index:1; pointer-events:none;
+}
+
+/* Vignette */
+body::after{
+  content:""; position:fixed; inset:0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.34) 100%);
+  pointer-events:none; z-index:4;
+}
+
+/* screen-reader only */
+.sr-only{ position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap; }

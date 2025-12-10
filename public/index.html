@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Resultados Oficiales – Concurso de Comparsas 2025</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="snowCanvas" aria-hidden="true"></canvas>
+
+  <main class="container">
+    <header class="header">
+      <h1>Resultados Oficiales — Concurso de Comparsas 2025</h1>
+      <p class="lead">Datos en vivo desde Firebase · Actualización automática</p>
+    </header>
+
+    <section class="card">
+      <div class="table-wrap" role="region" aria-labelledby="tabla-title">
+        <h2 id="tabla-title" class="sr-only">Clasificación</h2>
+        <table id="tablaResultados" aria-live="polite">
+          <thead>
+            <tr>
+              <th scope="col">Lugar</th>
+              <th scope="col">Comparsa</th>
+              <th scope="col">Votos (jueces)</th>
+              <th scope="col">Puntaje Total</th>
+              <th scope="col">Premio</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <small>Actualizaciones en tiempo real — © Concurso de Comparsas 2025</small>
+    </footer>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Configuración Firebase (mantener si ya la tienes)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCv4s9MY2LusJsNHFMZeTGrbEnYxLcMlNQ",
+      authDomain: "votacionesevento.firebaseapp.com",
+      projectId: "votacionesevento",
+      storageBucket: "votacionesevento.firebasestorage.app",
+      messagingSenderId: "811437774346",
+      appId: "1:811437774346:web:201f29d00468e12e4971f3",
+      measurementId: "G-CCGHNMLGV7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Id del evento (string)
+    const eventId = "2025";
+
+    // Referencias UI
+    const tbody = document.querySelector("#tablaResultados tbody");
+
+    // Guarda el orden anterior para animaciones
+    let prevOrder = [];
+
+    // Carga participantes inicialmente
+    async function cargarParticipantes() {
+      const snap = await getDocs(collection(db, `events/${eventId}/participants`));
+      const participantes = {};
+
+      snap.forEach(doc => {
+        const data = doc.data() || {};
+        const nombre = data.nombre ?? data.participantNombre ?? "Sin nombre";
+        participantes[doc.id] = {
+          id: doc.id,
+          nombre,
+          puntajes: [],
+          total: 0,
+          votos: 0
+        };
+      });
+
+      return participantes;
+    }
+
+    async function contarJueces() {
+      const snap = await getDocs(collection(db, `events/${eventId}/judges`));
+      return snap.size || 0;
+    }
+
+    // Helper: aplica clases de premio segun índice (colores navideños)
+    function clasePorIndice(index) {
+      if (index === 0) return "first";
+      if (index === 1) return "second";
+      if (index === 2) return "third";
+      return "";
+    }
+
+    // Animación visual cuando cambian posiciones
+    function marcarCambios(newOrder) {
+      // newOrder: array de ids en el nuevo orden
+      const movedUp = [];
+      const movedDown = [];
+
+      const indexOfPrev = id => prevOrder.indexOf(id);
+      newOrder.forEach((id, newIdx) => {
+        const oldIdx = indexOfPrev(id);
+        if (oldIdx === -1) return; // nuevo participante
+        if (oldIdx > newIdx) movedUp.push(id);
+        else if (oldIdx < newIdx) movedDown.push(id);
+      });
+
+      // Limpiar clases previas
+      document.querySelectorAll("#tablaResultados tbody tr").forEach(tr => {
+        tr.classList.remove("moved-up", "moved-down", "new-entry");
+      });
+
+      // Marcar moved-up/moved-down
+      movedUp.forEach(id => {
+        const tr = document.querySelector(`#row-${id}`);
+        if (tr) tr.classList.add("moved-up");
+      });
+      movedDown.forEach(id => {
+        const tr = document.querySelector(`#row-${id}`);
+        if (tr) tr.classList.add("moved-down");
+      });
+
+      // Marcar entradas nuevas (no estaban en prevOrder)
+      newOrder.forEach(id => {
+        if (!prevOrder.includes(id)) {
+          const tr = document.querySelector(`#row-${id}`);
+          if (tr) tr.classList.add("new-entry");
+        }
+      });
+
+      // Actualizamos prevOrder
+      prevOrder = [...newOrder];
+
+      // Limpiar clases después de la animación (ej. 1800ms)
+      setTimeout(() => {
+        document.querySelectorAll("#tablaResultados tbody tr").forEach(tr => {
+          tr.classList.remove("moved-up", "moved-down", "new-entry");
+        });
+      }, 1800);
+    }
+
+    // Inicia escucha en tiempo real
+    async function iniciarResultadosEnVivo() {
+      const participantes = await cargarParticipantes();
+      const totalJueces = await contarJueces();
+
+      // Escuchar la colección de scores
+      onSnapshot(collection(db, `events/${eventId}/scores`), snap => {
+        // Reset
+        Object.values(participantes).forEach(p => {
+          p.puntajes = [];
+          p.total = 0;
+          p.votos = 0;
+        });
+
+        // Procesar scores
+        snap.forEach(doc => {
+          const data = doc.data() || {};
+          const pid = data.participantId;
+          const value = Number(data.totalFinal ?? data.score ?? 0);
+          if (!pid || !participantes[pid]) return;
+          participantes[pid].puntajes.push(value);
+          participantes[pid].votos += 1;
+        });
+
+        // Calcular totales
+        Object.values(participantes).forEach(p => {
+          p.total = p.puntajes.reduce((a, b) => a + b, 0);
+        });
+
+        // Ordenar por total descendente
+        const lista = Object.values(participantes).sort((a, b) => b.total - a.total);
+
+        // Render tabla
+        tbody.innerHTML = "";
+        const newOrder = [];
+
+        lista.forEach((p, index) => {
+          newOrder.push(p.id);
+          const premio = index === 0 ? "$400" : index === 1 ? "$300" : index === 2 ? "$200" : "";
+          const clasePremio = clasePorIndice(index);
+          const tr = document.createElement("tr");
+          tr.id = `row-${p.id}`;
+          tr.className = clasePremio;
+          tr.innerHTML = `
+            <td class="place">${index + 1}</td>
+            <td class="name">
+              <div class="name-main">${escapeHtml(p.nombre)}</div>
+              <div class="meta"><small>${p.votos}/${totalJueces} jueces han votado ${p.votos < totalJueces ? `(faltan ${totalJueces - p.votos})` : ""}</small></div>
+            </td>
+            <td class="votes">${p.votos}</td>
+            <td class="score">${p.total}</td>
+            <td class="prize">${premio}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Animar cambios comparandolo con prevOrder
+        marcarCambios(newOrder);
+      }, error => {
+        console.error("Error escuchando scores:", error);
+      });
+    }
+
+    // Helper simple para evitar inyección al insertar nombres
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    iniciarResultadosEnVivo();
+  </script>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
