@@ -53,12 +53,12 @@ h1 {
 
 .subtitle {
   text-align: center;
-  color: #444; /* Un poco más oscuro para resaltar sobre el fondo */
+  color: #fefefe; /* Un poco más oscuro para resaltar sobre el fondo */
   margin-bottom: 30px;
   font-weight: 700;
   z-index: 10;
   position: relative;
-  background-color: rgba(255,255,255,0.6); /* Pequeña placa de fondo para el texto */
+  background-color: rgba(234, 140, 140, 0.6); /* Pequeña placa de fondo para el texto */
   display: inline-block;
   padding: 5px 15px;
   border-radius: 15px;
