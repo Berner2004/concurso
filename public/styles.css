@@ -1,5 +1,3 @@
-/* ... (Todo el CSS anterior se mantiene igual hasta la parte de Media Queries) ... */
-
 /* --- Variables Navideñas --- */
 :root {
   --primary-color: #C0392B; 
@@ -39,10 +37,9 @@ h1 {
 
 /* --- Tabla Decorada --- */
 #tablaContainer {
-  width: 90%; /* Un poco más ancha para acomodar la nueva columna */
+  width: 90%; 
   margin: 20px auto;
   border-radius: 20px;
-  overflow: hidden;
   background: rgba(255, 255, 255, 0.95);
   position: relative;
   z-index: 10;
@@ -53,10 +50,26 @@ h1 {
     0 0 0 15px var(--secondary-color),
     0 10px 30px rgba(0,0,0,0.2);
   transition: transform 0.5s ease;
+
+  /* --- HABILITAR SCROLL SI LA TABLA ES MUY GRANDE --- */
+  overflow-x: auto; /* Esto permite mover la tabla horizontalmente */
+  -webkit-overflow-scrolling: touch; /* Suavidad en iPhone/Android */
 }
 
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 18px 15px; text-align: center; border-bottom: 1px solid #eee; }
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  /* Asegura que la tabla no se aplaste demasiado */
+  min-width: 600px; 
+}
+
+th, td { 
+  padding: 18px 15px; 
+  text-align: center; 
+  border-bottom: 1px solid #eee;
+  /* Evita que el texto se rompa en líneas raras en celular */
+  white-space: nowrap; 
+}
 
 th {
   background: linear-gradient(135deg, var(--primary-color), #922b21);
@@ -98,32 +111,24 @@ small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
 @keyframes fall { 0% { top: -10%; } 100% { top: 100%; } }
 @keyframes sway { 0% { transform: translateX(0px); } 50% { transform: translateX(50px); } 100% { transform: translateX(0px); } }
 
-/* --- RESPONSIVIDAD (MÓVIL) ACTUALIZADA --- */
+/* --- RESPONSIVIDAD (SOLO AJUSTES DE TAMAÑO) --- */
 @media (max-width: 768px) {
-  body { padding: 15px; }
-  #tablaContainer { width: 100%; margin-top: 10px; box-shadow: 0 0 0 4px var(--primary-color); }
-  h1 { font-size: 2em; }
-  
-  /* Ajuste de tabla en móvil */
-  table, thead, tbody, th, td, tr { display: block; }
-  thead tr { position: absolute; top: -9999px; left: -9999px; }
-  tr { border: 1px solid #ccc; margin-bottom: 10px; border-radius: 8px; }
-  
-  td {
-    border: none; border-bottom: 1px solid #eee; position: relative;
-    padding-left: 50%; text-align: right;
+  body { 
+    padding: 15px 5px; /* Menos padding en celular para aprovechar pantalla */
   }
   
-  td:before {
-    position: absolute; top: 0; left: 6px; width: 45%; padding-right: 10px;
-    white-space: nowrap; text-align: left; font-weight: 700; color: var(--primary-color);
-    padding-top: 18px; /* Alinear verticalmente con el contenido */
+  #tablaContainer { 
+    width: 100%; 
+    margin-top: 10px; 
+    box-shadow: 0 0 0 4px var(--primary-color); /* Borde más delgado en móvil */
+  }
+  
+  h1 { 
+    font-size: 1.8em; /* Título más pequeño */
   }
 
-  /* ETIQUETAS ACTUALIZADAS PARA 5 COLUMNAS */
-  td:nth-of-type(1):before { content: "Lugar"; }
-  td:nth-of-type(2):before { content: "Comparsa"; }
-  td:nth-of-type(3):before { content: "Carrera"; } /* Nueva Etiqueta */
-  td:nth-of-type(4):before { content: "Puntaje"; }
-  td:nth-of-type(5):before { content: "Premio"; }
+  /* YA NO TRANSFORMAMOS LA TABLA EN BLOQUES.
+     Al tener 'overflow-x: auto' en el #tablaContainer (arriba),
+     el usuario podrá deslizar horizontalmente.
+  */
 }
