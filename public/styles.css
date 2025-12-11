@@ -4,11 +4,8 @@
   --secondary-color: #27AE60; /* Verde Pino */
   --gold-color: #F1C40F;      /* Dorado */
   --text-color: #2c3e50;
-  /* Color de fondo para la nieve */
-  --bg-overlay: rgba(255, 255, 255, 0.88); 
+  --card-bg: rgba(255, 255, 255, 0.95);
 }
-
-/* ... (Las variables :root permanecen igual al inicio) ... */
 
 body {
   font-family: 'Montserrat', sans-serif;
@@ -17,131 +14,147 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 
-  /* --- NUEVO FONDO ESPOCH OPACO --- */
+  /* --- FONDO ESPOCH OPACO --- */
   background: 
-    /* CAPA 1 (Superior): Degradado de tinte "Opaco/Navideño". 
-       - Empieza blanco casi sólido en el centro para legibilidad.
-       - Termina en el rojo principal de tu tema con transparencia (0.6) hacia los bordes.
-    */
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 20%, rgba(192, 57, 43, 0.6) 100%),
-
-    /* CAPA 2 (Inferior): La foto de las instalaciones.
-       - NOTA: Puedes cambiar esta URL por cualquier otra foto de la ESPOCH que prefieras.
-    */
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(230, 240, 255, 0.8) 100%),
     url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Entrada_Principal_ESPOCH.jpg/1280px-Entrada_Principal_ESPOCH.jpg') no-repeat center center fixed;
-
-  /* Asegura que la imagen cubra toda la pantalla sin deformarse */
   background-size: cover;
-  
-  /* Modo de mezcla: "overlay" o "multiply" ayudan a integrar el color sobre la foto */
-  background-blend-mode: overlay;
-  /* -------------------------------- */
+  background-blend-mode: normal; 
 }
-
-/* ... (El resto del CSS, desde h1 en adelante, sigue exactamente igual) ... */
 
 h1 {
   font-size: 2.8em;
   font-weight: 900;
   color: var(--primary-color);
   text-align: center;
-  text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
-  z-index: 10;
-  position: relative;
+  text-shadow: 2px 2px 0px #fff;
   margin-bottom: 10px;
 }
 
 .subtitle {
   text-align: center;
-  color: #fefefe; /* Un poco más oscuro para resaltar sobre el fondo */
-  margin-bottom: 30px;
+  color: #444;
+  margin-bottom: 40px;
   font-weight: 700;
-  z-index: 10;
-  position: relative;
-  background-color: rgba(234, 140, 140, 0.6); /* Pequeña placa de fondo para el texto */
+  background-color: rgba(255,255,255,0.6);
   display: inline-block;
   padding: 5px 15px;
   border-radius: 15px;
-  /* Centrar el bloque del subtítulo */
+  position: relative;
   left: 50%;
   transform: translateX(-50%);
 }
 
-/* --- Tabla Decorada --- */
-#tablaContainer {
-  width: 90%; 
-  margin: 20px auto;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  position: relative;
+/* --- GRID DE TARJETAS --- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  width: 90%;
+  margin: 0 auto;
   z-index: 10;
-  
-  /* Borde Festivo (Bastón de Caramelo) */
-  box-shadow: 
-    0 0 0 6px white, 
-    0 0 0 9px var(--primary-color), 
-    0 0 0 12px white, 
-    0 0 0 15px var(--secondary-color),
-    0 10px 30px rgba(0,0,0,0.2);
-    
-  transition: transform 0.5s ease;
-
-  /* --- HABILITAR SCROLL HORIZONTAL (MÓVIL) --- */
-  overflow-x: auto; 
-  -webkit-overflow-scrolling: touch; 
+  position: relative;
 }
 
-table { 
-  width: 100%; 
-  border-collapse: collapse; 
-  /* Ancho mínimo para forzar el scroll en pantallas pequeñas */
-  min-width: 700px; 
-}
-
-th, td { 
-  padding: 18px 15px; 
-  text-align: center; 
-  border-bottom: 1px solid #eee;
-  /* Evitar que el texto se rompa */
-  white-space: nowrap; 
-}
-
-th {
-  background: linear-gradient(135deg, var(--primary-color), #922b21);
-  color: white;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* --- Estilos del Podio --- */
-.gold { background: linear-gradient(to right, #fff9c4, #fff); border-left: 8px solid var(--gold-color); }
-.gold td:first-child { font-size: 1.6em; color: #b7950b; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-
-.silver { background: linear-gradient(to right, #f2f3f4, #fff); border-left: 8px solid #bdc3c7; }
-.silver td:first-child { font-size: 1.4em; color: #7f8c8d; }
-
-.bronze { background: linear-gradient(to right, #f5eef8, #fff); border-left: 8px solid #d35400; }
-.bronze td:first-child { font-size: 1.3em; color: #a04000; }
-
-.puntaje-destacado { font-weight: 900; font-size: 1.2em; color: var(--text-color); }
-.premio-destacado { font-weight: 900; color: var(--primary-color); }
-
-small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
-
-/* --- Animación Flash (Actualización Top 3) --- */
-@keyframes snowFlash {
-  0% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.02); filter: brightness(1.2) drop-shadow(0 0 15px gold); }
-  100% { transform: scale(1); filter: brightness(1); }
-}
-.animate-update { animation: snowFlash 1.2s ease-in-out; }
-
-/* --- SECCIÓN QR --- */
-#qr-container {
+/* --- ESTILO DE TARJETA --- */
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 25px;
   text-align: center;
-  margin-top: 60px;
-  margin-bottom: 80px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 5px solid var(--secondary-color);
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(192, 57, 43, 0.3);
+}
+
+/* Colores de Ranking */
+.card.rank-1 { border-top: 8px solid var(--gold-color); background: linear-gradient(to bottom, #fffcf2, #fff); }
+.card.rank-2 { border-top: 8px solid #bdc3c7; }
+.card.rank-3 { border-top: 8px solid #d35400; }
+
+.card-title {
+  font-size: 1.4em;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #333;
+  line-height: 1.2;
+  margin-top: 10px;
+}
+
+/* --- SECCIÓN DE JUECES --- */
+.judges-section {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.score-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.judge-score {
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  color: #555;
+  font-weight: bold;
+  font-size: 1.1em;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.judge-name-label {
+  font-size: 0.75em;
+  color: #555;
+  margin-top: 5px;
+  font-weight: 700;
+  max-width: 85px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- TOTALES --- */
+.total-label {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.total-number {
+  font-size: 3.5em;
+  font-weight: 900;
+  color: var(--primary-color);
+  line-height: 1;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+/* --- SECCIÓN TEXTO QR (CENTRADO FLEXBOX) --- */
+#qr-text-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 15px;
   position: relative;
   z-index: 10;
 }
@@ -150,80 +163,53 @@ small { display: block; font-size: 0.85em; opacity: 0.7; margin-top: 5px; }
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   color: var(--primary-color);
-  font-size: 1.5em;
-  margin-bottom: 25px;
+  font-size: 1.6em;
   text-shadow: 2px 2px 0px #fff;
-  background-color: rgba(255,255,255,0.7);
-  display: inline-block;
-  padding: 5px 20px;
-  border-radius: 20px;
+  background-color: rgba(255,255,255,0.85);
+  padding: 10px 30px;
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* --- SECCIÓN IMAGEN QR (CENTRADO FLEXBOX) --- */
+#qr-img-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 10;
 }
 
 .qr-image {
   background-color: white;
   padding: 10px; 
   border-radius: 25px;
-  /* Doble borde festivo */
   box-shadow: 
     0 0 0 8px white,
     0 0 0 15px var(--secondary-color), 
     0 20px 40px rgba(0,0,0,0.3);
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.3s;
 }
 
-.qr-image:hover {
-  transform: scale(1.1) rotate(3deg);
-  cursor: pointer;
-}
+.qr-image:hover { transform: scale(1.1) rotate(3deg); cursor: pointer; }
 
 /* --- Efecto Nieve --- */
 .snowflake {
-  position: fixed; 
-  top: -10px; 
-  z-index: 1; 
-  color: #d6eaf8; 
-  font-size: 1em;
-  text-shadow: 0 0 5px #000; 
-  user-select: none; 
-  cursor: default;
-  animation-name: fall, sway; 
-  animation-timing-function: linear, ease-in-out; 
-  animation-iteration-count: infinite, infinite;
+  position: fixed; top: -10px; z-index: 1; color: #d6eaf8; font-size: 1em;
+  text-shadow: 0 0 5px #000; user-select: none; cursor: default;
+  animation-name: fall, sway; animation-timing-function: linear, ease-in-out; animation-iteration-count: infinite, infinite;
 }
+@keyframes fall { 0% { top: -10%; } 100% { top: 100%; } }
+@keyframes sway { 0% { transform: translateX(0px); } 50% { transform: translateX(50px); } 100% { transform: translateX(0px); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes snowFlash { 0% { filter: brightness(1); } 50% { filter: brightness(1.3); } 100% { filter: brightness(1); } }
+.animate-update { animation: snowFlash 1s ease-in-out; }
 
-@keyframes fall { 
-  0% { top: -10%; } 
-  100% { top: 100%; } 
-}
-
-@keyframes sway { 
-  0% { transform: translateX(0px); } 
-  50% { transform: translateX(50px); } 
-  100% { transform: translateX(0px); } 
-}
-
-/* --- Responsividad --- */
+/* Responsividad */
 @media (max-width: 768px) {
-  body { 
-    padding: 15px 5px; 
-  }
-  
-  #tablaContainer { 
-    width: 100%; 
-    margin-top: 10px; 
-    box-shadow: 0 0 0 4px var(--primary-color); 
-  }
-  
-  h1 { 
-    font-size: 1.8em; 
-  }
-
-  .qr-title { 
-    font-size: 1.2em; 
-  }
-  
-  .qr-image {
-    width: 160px;
-    height: 160px;
-  }
+  body { padding: 15px 10px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .total-number { font-size: 3em; }
 }

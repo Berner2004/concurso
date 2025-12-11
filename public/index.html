@@ -10,31 +10,27 @@
 <body>
 
   <div id="snow-container"></div>
-  <h1>🎅 Resultados Oficiales 🎄<br>Pase del Niño 2025</h1>
+
+  <h1>🎅 Resultados Oficiales 🎄<br>Concurso de Comparsas 2025</h1>
   <p class="subtitle">❄️ Datos actualizados en tiempo real desde el Polo Norte ❄️</p>
 
-  <div id="tablaContainer">
-    <table id="tablaResultados">
-      <thead>
-        <tr>
-          <th>Lugar</th>
-          <th>Comparsa</th>
-          <th>Carrera</th> <th>Puntaje Total</th>
-          <th>Premio Navideño</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="5" style="padding: 30px;">🎁 Cargando resultados mágicos...</td></tr>
-      </tbody>
-    </table>
+  <div id="cards-container" class="cards-grid">
+    <div style="width: 100%; text-align: center; color: white; font-size: 1.5em; padding: 40px;">
+      🎁 Cargando tarjetas mágicas...
+    </div>
   </div>
 
-  <div style="text-align: center; margin: 20px 0;">
-  <p style="font-weight: bold; margin-bottom: 10px;">📱 ¡Escanea para ver en tu móvil!</p>
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://closepath.info" 
-       alt="QR Code" 
-       style="border: 5px solid white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-</div>
+  <div id="qr-text-container">
+    <p class="qr-title">📱 ¡Escanea para seguir en vivo!</p>
+  </div>
+
+  <div id="qr-img-container">
+    <img class="qr-image" 
+         src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://closepath.onrender.com" 
+         alt="QR Code"
+         width="220" height="220">
+  </div>
+
   <script type="module" src="app.js"></script>
 
 </body>
